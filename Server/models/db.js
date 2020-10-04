@@ -6,3 +6,4 @@ mongoose.connect('mongodb://localhost:27017/QuanLyGiaiDB', { useNewUrlParser: tr
 })
 
 require('./User')
+require('./League')

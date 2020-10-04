@@ -79,8 +79,8 @@ router.post('/login', (req, res)=>{//Login
 
 })
 //Update
-router.post('/update', async(req, res)=>{
-    const user = await User.findOne({email: req.body.email});
+router.post('/update', (req, res)=>{
+  User.findOne({email: req.body.email}, (err, user)=>{
     user.lastName = req.body.lastName
     user.firstName = req.body.firstName
     bcrypt.genSalt(10, (err, salt) => {// Hash password
@@ -95,13 +95,18 @@ router.post('/update', async(req, res)=>{
         })
     })
     user.can_add = req.body.add
-    user.can_add = req.body.edit
+    user.can_edit = req.body.edit
     user.admin = req.body.isAdmin
-    newUser
-    .save()//Save New User
+    user
+    .save()
     .then(user => {
-        return res.json({ message: 'Done' })
+        return res.json({ 
+            message: 'Done' })
     })
+  });
+    
 })
 
 module.exports = router
+
+
