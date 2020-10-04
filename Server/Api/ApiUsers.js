@@ -52,7 +52,6 @@ router.post('/register', (req, res) => {
         }
     })
 })
-
 //Login
 router.post('/login', (req, res)=>{//Login
     const email = req.body.email
@@ -78,6 +77,31 @@ router.post('/login', (req, res)=>{//Login
         }
     })
 
+})
+//Update
+router.post('/update', async(req, res)=>{
+    const user = await User.findOne({email: req.body.email});
+    user.lastName = req.body.lastName
+    user.firstName = req.body.firstName
+    bcrypt.genSalt(10, (err, salt) => {// Hash password
+        bcrypt.hash(req.body.password, salt, (err, hash) => {
+            if (err) {
+                
+                return res.json({ message: err  }) }
+            else{
+                user.password = hash //Add Hash password
+            }
+            
+        })
+    })
+    user.can_add = req.body.add
+    user.can_add = req.body.edit
+    user.admin = req.body.isAdmin
+    newUser
+    .save()//Save New User
+    .then(user => {
+        return res.json({ message: 'Done' })
+    })
 })
 
 module.exports = router
