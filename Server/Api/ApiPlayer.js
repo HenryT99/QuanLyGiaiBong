@@ -9,6 +9,7 @@ const router = require('express').Router()
 const Player = require('../models/Player.Schema')
 const Team = require('../models/Team.Schema')
 const League = require('../models/League.Schema')
+const uuid = require('uuid/v4')
 
 router.post('/id', (req, res) =>{//Find Players with ID
     // Player.findById(req.body.IDPlayer, (err, player)=>{
@@ -49,6 +50,7 @@ router.post('/add', (req, res)=>{//Add Player
         League.findById(req.body.IDLeague, (err, league)=>{
             const teamIdx = league.teams.findIndex(team=>team.ID === req.body.IDTeam)
             const player = {
+                ID: uuid(),
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 dateOfBirth: req.body.dateOfBirth,
@@ -56,7 +58,7 @@ router.post('/add', (req, res)=>{//Add Player
                 numberShirt: req.body.numberShirt,
                 goals: 0
             }
-            league.teams[teamIdx].push(player)
+            league.teams[teamIdx].players.push(player)
             league.save()
             .then(() =>{
                 return res.json({ message:'Success'})
